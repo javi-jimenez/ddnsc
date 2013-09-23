@@ -31,8 +31,7 @@ Usage
 
 In the next sections we describe the configuration or steps to set up the client/s and server/s.
 
-Client
-~~~~~~
+###Client
 
 Download the `avahi-publish-remote.sh` script.
 
@@ -49,15 +48,13 @@ Publish services to the remote service reposiroty server: `./avahi_publish_remot
 
 enjoy!
 
-Server
-~~~~~~
+### Server
 
 The server is a normal `bind` server configured with a zone called `ddns` and with the zone parameter `allow-update { any; };`. You can filter with acl if you want. The user has to be allowed to publish it's own services, she doesn't need authorization from anyone.
 
 The server can rely on the usual DNS upstream servers for the rest of domains.
 
-Checking the steps
-~~~~~~~~~~~~~~~~~~
+### Checking the steps
 
 To browse services from any client configured to use the Server (in /etc/resolv.conf) you can for example look for SSH servers in the remote DNS server, you can do: `avahi-browse -d ddns _ssh._tcp` (standard Avahi utils package). For HTTP servers you can change *ssh* for *http*, and for FTP change it with *ftp*, the available services are in the */etc/services* file of your system.
 
@@ -67,8 +64,7 @@ If you want to resolve your own hostname in the remote DNS server, you can for e
 
 Another interesting tool to test the DNS is `dig`.
 
-Improving searchs
-~~~~~~~~~~~~~~~~~
+### Improving searchs
 
 You can add the `search ddns` to look for hosts directly in the domain `.ddns`, you can then do `host ahost` and the system will look for your host `ahost` in the domain `.ddns`. At the moment you have to continue specifying the domain when using the `avahi-publish-remote.sh` tools.
 
