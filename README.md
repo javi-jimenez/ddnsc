@@ -31,7 +31,7 @@ Usage
 
 In the next sections we describe the configuration or steps to set up the client/s and server/s.
 
-###Client
+### Client
 
 Download the `avahi-publish-remote.sh` script.
 
@@ -66,7 +66,7 @@ Another interesting tool to test the DNS is `dig`.
 
 ### Improving searchs
 
-You can add the `search ddns` to look for hosts directly in the domain `.ddns`, you can then do `host ahost` and the system will look for your host `ahost` in the domain `.ddns`. At the moment you have to continue specifying the domain when using the `avahi-publish-remote.sh` tools.
+You can add to the begin of `resolv.conf` file the `search ddns` to look for hosts directly in the domain `.ddns`, you can then do `host ahost` and the system will look for your host `ahost` in the domain `.ddns`. At the moment you have to continue specifying the domain when using the `avahi-publish-remote.sh` tools.
 
 Distribute DNS servers
 ----------------------
