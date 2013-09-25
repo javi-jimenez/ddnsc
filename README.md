@@ -1,15 +1,17 @@
 Avahi Publish Remote (Distributed DNS Cache, DDNSC)
 ===================================================
 
-Authors: Javi Jiménez, Roger Baig, Pau Escrich (guifi.net Foundation), Henning Rogge, Dan Staples, Jonathan"storm" and Saverioi Proto.
+Authors: Javi Jiménez, Roger Baig, Pau Escrich (guifi.net Foundation), Henning Rogge, Dan Staples, Jonathan"storm" and Saverio Proto.
 
-Part of the "Distributed DNS Cache" (DDNSC) project from Battlemesh v6, due to the talk "Avahi distributed services" and the communicated need to me of building a Cloud of Services for the guifi.net Community Network, with more than 20.000 nodes.
+Part of the ["Distributed DNS Cache" (DDNSC)] [ddnsc] project from [Battlemesh v6] [wbmv6], due to the talk ["Automated Sharing and Location of Services"] [avahitalkwbmv6] and the communicated need to me of building a Cloud of Services for the guifi.net Community Network, with more than 20.000 nodes.
 
 In the first release of this script we use Bind, which provides the RFC2136 mechanism for remotely update the DNS registers.
 
 In next releases we want to use dnsmasq, at the moment there are no positive results using RFC2136 mechanisms. Updating files adding services don't work in dnsmasq at the moment. Adding host names updating files in dnsmasq works.
 
 We try to use as many as possible standards and already existing tools for the project. We don't try to reinvent the wheel.
+
+*This is an experimental script in its first release.*
 
 Requirements
 ------------
@@ -91,4 +93,9 @@ Following the RFC2136 we made Avahi capable of publishing services to a remote D
 
 In the next stages we can use `dnsmasq` and load-balancing. We think about the DDNSC document which says to use hashing for the services.
 
+References
+----------
 
+[ddnsc]: https://docs.google.com/document/d/1lW1jH4yjf2W5HlBi0a6vM1rXi7fnfJAlcbE-idDlcOw/ "Distributed DNS Cache (DDNSC)"
+[wbmv6]: http://battlemesh.org/BattleMeshV6/ "Battlemesh v6"
+[avahitalkwbmv6]: http://battlemesh.org/BattleMeshV6/Agenda?action=AttachFile&do=view&target=LT01_automated-share-and-locate-services.pdf "Automated Sharing and Location of Services"
