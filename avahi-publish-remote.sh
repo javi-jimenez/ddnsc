@@ -27,15 +27,17 @@ WEIGHT=5
 tmpfile=`mktemp`
 
 # A utility to test if the ip is IPv6 or not
+# Can be improved calling libs or writing regex
 ip_is_ipv6 () {
   # params: ip
-  [ $# -eq 0 ] && echo "A utility to test if the ip is IPv6 or not.\nUsage: `basename $0` <ip>" && exit 1
+  [ $# -eq 0 ] && echo "A utility to test if the given IP is an IPv6 or not.\nUsage: `basename $0` <ip>" && exit 1
 #  ip=$1
   echo $1 | grep ":" 2>&1 > /dev/null
   val=`echo $?`
   return $val
 }
 
+# Get a list of host IPs
 get_my_ips () {
   # This is a very basic script to try helping the final user
   # you can use avahi_publish_remote_address to publish the IPs of your choice.
@@ -44,31 +46,33 @@ get_my_ips () {
   echo $ips
 }
 
+# Automatically publishes all the host pair IP-hostname to a remote server
+# Useful when the local IPs or hostname change
 avahi_publish_remote_myips () {
   [ $# -eq 0 ] && echo "Usage: `basename $0` <domain>" && exit 1
   domain=$1
   # IPs for inet except loopback
   # private IPs are taken too
+  # TODO: ips=get_my_ips
   ips=`ip -f inet addr show | grep inet|cut -c 10- | cut -f 1 -d ' '|grep -v "127.0." | cut -f 1 -d '/'`
   for var in $ips ; do
     avahi_publish_remote_address `hostname` $ips $domain
   done
 }
 
+# Publish addesses and hostname to the remote server
+# The hostname and address is given manually in command line
 avahi_publish_remote_address () {
   # Publish address for hostname
   [ $# -eq 0 ] && echo "Usage: `basename $0` <hostname> <address> [<domain>]" && exit 1
   hostname=$1
   address=$2
   [ $# -eq 3 ] && domain=$3 && echo "zone $domain" >> $tmpfile
-
-echo "name=$name address=$address domain=$domain"
-
-
-  # TODO: 
+  # DEBUG: echo "name=$name address=$address domain=$domain"
+  # TODO: Have we to delete the previous registers?
+  # For the development phase, we don't delete the previous registers.
   #echo "update delete $name.$domain A" >> $tmpfile
   #echo "update delete $name.$domain AAAA" >> $tmpfile
-
   if ip_is_ipv6 $address ; then
     echo "update add $hostname.$domain $TTL IN AAAA $address" >> $tmpfile
     echo "send" >> $tmpfile
@@ -79,6 +83,8 @@ echo "name=$name address=$address domain=$domain"
   do_nsupdate
 }
 
+# Publish a service to a remote server with a name, a type for the service,
+# and with a port for the service, optionally a TXT-RECORD can be given
 avahi_publish_remote_service () {
   [ $# -eq 0 ] && echo "Usage: `basename $0` <name> <type> <port> <domain> [<txt-record>]" && exit 1
   # publish requirements for service and service with domain name
@@ -105,21 +111,26 @@ domain=$4
   echo "Remember to publish your ip address/es (IPv4, IPv6) for the name '$name' which will be visible pointing to your services in the remote server with the command './avahi_publish_remote_address'. If you want to automatically publish ALL your IPs to remote, you can run the command 'avahi_publish_remote_myips' without parameters."
 }
 
+# Run the update which is stored in a temporary file
 do_nsupdate (){
   echo $tmpfile
   cat $tmpfile
   nsupdate -v $tmpfile
 }
 
+# Creates the auto_links giving the user new functionallity from the
+# command line. Creates link files to this script.
 make_auto_links (){
-  # "() {" are     published
-  # "(){"  are not published
+  # "() {" are     published functions of this script.
+  # "(){"  are not published functions of this script.
   thisfile=`basename $0`
   for var in `cat $thisfile | grep "() {" | cut -f 1 -d ' '` ; do
     ln -s $thisfile $var 2>/dev/null 
   done
 }
 
+# If a link is used, run the proper function, else give info about 
+# how to work with this script and functions.
 if [ -L `basename $0` ] ; then
   `basename $0` $* 
 else
